@@ -164,11 +164,12 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
           {/* Switch Case Workspace dropdown */}
           {workspaces.length > 1 && (
             <div className="text-xs">
-              <label className="text-slate-400 block mb-1 font-semibold">Switch Case File:</label>
+              <label htmlFor="workspace-select" className="text-slate-400 block mb-1 font-semibold">Switch Case File:</label>
               <select
+                id="workspace-select"
                 value={activeWorkspaceId}
                 onChange={(e) => setActiveWorkspaceId(e.target.value)}
-                className="bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                className="bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none"
               >
                 {workspaces.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -368,27 +369,29 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
             <form onSubmit={handleUploadDocument} className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label htmlFor="file-name" className="block text-xs font-semibold text-slate-300 mb-1">
                     Document Title / File Name <span className="text-rose-400">*</span>
                   </label>
                   <input
+                    id="file-name"
                     type="text"
                     required
                     value={fileName}
                     onChange={(e) => setFileName(e.target.value)}
                     placeholder="e.g. lease_agreement_signed_2025.pdf or bank_challan.png"
-                    className="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                    className="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  <label htmlFor="doc-category" className="block text-xs font-semibold text-slate-300 mb-1">
                     Legal Category
                   </label>
                   <select
+                    id="doc-category"
                     value={docCategory}
                     onChange={(e) => setDocCategory(e.target.value as any)}
-                    className="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                    className="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                   >
                     <option value="Agreement/Contract">Agreement / Contract</option>
                     <option value="Legal Notice">Legal Notice</option>
@@ -536,7 +539,9 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
 
           {/* Send Box */}
           <form onSubmit={handleSendMessage} className="border-t border-slate-800 pt-3 flex space-x-2">
+            <label htmlFor="chat-input" className="sr-only">Message Input</label>
             <input
+              id="chat-input"
               type="text"
               required
               value={newMessageText}

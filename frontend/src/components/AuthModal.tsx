@@ -99,53 +99,57 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
           {isRegister ? (
             <>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Full Legal Name</label>
+                <label htmlFor="full-name" className="block text-xs font-semibold text-slate-300 mb-1">Full Legal Name</label>
                 <input
+                  id="full-name"
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Adv. Amit Saxena or Smt. Kavita Roy"
-                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                <label htmlFor="email-address" className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
                 <input
+                  id="email-address"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Phone Number (+91)</label>
+                <label htmlFor="phone-number" className="block text-xs font-semibold text-slate-300 mb-1">Phone Number (+91)</label>
                 <input
+                  id="phone-number"
                   type="tel"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
               {role === 'advocate' && (
                 <div>
-                  <label className="block text-xs font-semibold text-amber-400 mb-1">
+                  <label htmlFor="bar-enrollment" className="block text-xs font-semibold text-amber-400 mb-1">
                     State Bar Council Enrolment Number <span className="text-rose-400">*</span>
                   </label>
                   <input
+                    id="bar-enrollment"
                     type="text"
                     required
                     value={barEnrollment}
                     onChange={(e) => setBarEnrollment(e.target.value)}
                     placeholder="e.g. D/1234/2018 or MAH/5678/2016"
-                    className="w-full bg-slate-950 border border-amber-500/50 rounded p-2 text-xs text-slate-200 focus:ring-1 focus:ring-amber-500 focus:outline-none font-mono"
+                    className="w-full bg-slate-950 border border-amber-500/50 rounded p-2 text-xs text-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none font-mono"
                   />
                   <span className="text-[10px] text-slate-400 mt-1 block">
                     Advocates require Bar Council verification before public listing.

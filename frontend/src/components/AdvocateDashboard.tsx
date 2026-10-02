@@ -224,13 +224,14 @@ export const AdvocateDashboard: React.FC<AdvocateDashboardProps> = ({
                   {/* Reschedule Input Panel */}
                   {isReschedulingThis && (
                     <div className="bg-slate-950 p-3 rounded-lg border border-amber-500/40 space-y-2 text-xs">
-                      <div className="font-bold text-amber-400">Propose Alternative Consultation Time:</div>
+                      <label htmlFor="reschedule-notes" className="font-bold text-amber-400 block mb-1">Propose Alternative Consultation Time:</label>
                       <input
+                        id="reschedule-notes"
                         type="text"
                         value={rescheduleNotes}
                         onChange={(e) => setRescheduleNotes(e.target.value)}
                         placeholder="e.g. Please choose between Tomorrow at 15:00 IST or Friday at 17:00 IST due to High Court hearing."
-                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                       <div className="flex justify-end space-x-2">
                         <button
