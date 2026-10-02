@@ -1,0 +1,52 @@
+﻿name: CalmStacks LegalConnect CI
+
+on:
+  push:
+    branches: [ main, feature/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Factory Automated Quality & Security Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Validate Factory Agent Specifications & Skills
+        shell: pwsh
+        run: |
+          ./scripts/validation/Test-AgentSpecs.ps1
+          ./scripts/validation/Test-Skills.ps1
+          ./scripts/validation/Test-Contracts.ps1
+
+      - name: Run AI Case Intake Benchmarks
+        run: |
+          cd ai
+          npm test
+
+      - name: Install & Test Backend API Server
+        run: |
+          cd backend
+          npm ci
+          npx tsc
+          npm test
+
+      - name: Verify Frontend Production Build
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Run End-to-End Verification & Secret Audit Suite
+        shell: pwsh
+        run: |
+          ./scripts/validation/Test-LegalConnectE2E.ps1

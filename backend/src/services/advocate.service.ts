@@ -56,6 +56,7 @@ export class AdvocateService {
         FROM advocate_profiles ap
         JOIN users u ON ap.user_id = u.id
         WHERE ap.verification_status = 'verified'
+        ORDER BY u.full_name ASC
       `)
       .all() as unknown as RawAdvocateRow[];
 
