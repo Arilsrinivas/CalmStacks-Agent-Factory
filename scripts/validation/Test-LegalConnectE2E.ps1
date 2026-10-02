@@ -40,8 +40,8 @@ $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $backendOutput = (node --no-warnings --test backend/dist/tests/*.test.js 2>&1)
 $sw.Stop()
 
-if ($LASTEXITCODE -eq 0 -and $backendOutput -match "# pass 3") {
-    Write-Host "    [PASS] Backend API: Contract & RBAC Tests Passed ($($sw.ElapsedMilliseconds)ms)" -ForegroundColor Green
+if ($LASTEXITCODE -eq 0 -and $backendOutput -match "# pass 35") {
+    Write-Host "    [PASS] Backend API: 35/35 Contract & RBAC Tests Passed across 6 Suites ($($sw.ElapsedMilliseconds)ms)" -ForegroundColor Green
     $totalPassed++
 } else {
     Write-Host "    [FAIL] Backend Tests failed!" -ForegroundColor Red
