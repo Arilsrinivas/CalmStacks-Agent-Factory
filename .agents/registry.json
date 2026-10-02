@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "factory": "CalmStacks Agent Factory",
   "agents": [
     {
@@ -9,6 +9,7 @@
       "role": "Requirements, PRD, and Acceptance Criteria",
       "stage": 1,
       "spec_file": ".agents/agents/product.md",
+      "skills": ["skills/project-planning"],
       "scope_allowed": ["docs/prd/", "specs/"],
       "parallel_compatible": false,
       "requires_worktree": false
@@ -19,6 +20,7 @@
       "role": "System Architecture, Contracts, and ADRs",
       "stage": 1,
       "spec_file": ".agents/agents/architect.md",
+      "skills": ["skills/project-planning"],
       "scope_allowed": ["contracts/", "docs/architecture/", "docs/adr/"],
       "parallel_compatible": false,
       "requires_worktree": false
@@ -29,6 +31,7 @@
       "role": "Design Systems, Tokens, and Interaction Flows",
       "stage": 2,
       "spec_file": ".agents/agents/uiux.md",
+      "skills": ["skills/implementation"],
       "scope_allowed": ["design/", "docs/ui/"],
       "parallel_compatible": true,
       "requires_worktree": false
@@ -39,6 +42,7 @@
       "role": "Data Models, Migrations, and Seed Data",
       "stage": 2,
       "spec_file": ".agents/agents/database.md",
+      "skills": ["skills/implementation"],
       "scope_allowed": ["database/", "contracts/schema.sql"],
       "parallel_compatible": true,
       "requires_worktree": false
@@ -49,6 +53,7 @@
       "role": "Client Application, UI Components, Client Tests",
       "stage": 3,
       "spec_file": ".agents/agents/frontend.md",
+      "skills": ["skills/implementation", "skills/iteration"],
       "scope_allowed": ["frontend/", "web/", "apps/web/"],
       "parallel_compatible": true,
       "requires_worktree": true
@@ -59,6 +64,7 @@
       "role": "Server APIs, Business Logic, Service Tests",
       "stage": 3,
       "spec_file": ".agents/agents/backend.md",
+      "skills": ["skills/implementation", "skills/iteration"],
       "scope_allowed": ["backend/", "server/", "services/"],
       "parallel_compatible": true,
       "requires_worktree": true
@@ -69,6 +75,7 @@
       "role": "Prompts, Model Pipelines, Evals",
       "stage": 3,
       "spec_file": ".agents/agents/aiml.md",
+      "skills": ["skills/implementation", "skills/iteration"],
       "scope_allowed": ["ai/", "ml/", "evals/"],
       "parallel_compatible": true,
       "requires_worktree": true
@@ -79,6 +86,7 @@
       "role": "E2E, Integration, and Contract Testing",
       "stage": 4,
       "spec_file": ".agents/agents/qa.md",
+      "skills": ["skills/iteration", "skills/code-review"],
       "scope_allowed": ["tests/", "e2e/", "docs/reports/qa/"],
       "parallel_compatible": true,
       "requires_worktree": false
@@ -89,6 +97,7 @@
       "role": "SAST, Secret Scanning, Vulnerability Auditing",
       "stage": 4,
       "spec_file": ".agents/agents/security.md",
+      "skills": ["skills/code-review"],
       "scope_allowed": ["docs/reports/security/", ".security/"],
       "parallel_compatible": true,
       "requires_worktree": false
@@ -99,6 +108,7 @@
       "role": "CI/CD, Docker, Deployment Automation",
       "stage": 5,
       "spec_file": ".agents/agents/devops.md",
+      "skills": ["skills/implementation", "skills/iteration"],
       "scope_allowed": [".github/workflows/", "deploy/", "Dockerfile", "docker-compose.yml"],
       "parallel_compatible": false,
       "requires_worktree": false

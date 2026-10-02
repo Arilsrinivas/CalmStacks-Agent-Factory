@@ -5,79 +5,66 @@ Workspace Skills in CalmStacks Agent Factory (`.agents/skills/<name>/SKILL.md`) 
 
 ---
 
-## 1. Skill Discovery Mechanism
+## 1. Definitive Agent-to-Skill Mapping Table
 
-Antigravity discovers workspace skills hierarchically:
-1. **Directory Discovery**: On startup or workspace scan, Antigravity traverses `.agents/skills/` located at the repository root.
-2. **Metadata Ingestion**: Antigravity extracts the YAML frontmatter (`name`, `description`) from each `SKILL.md`.
-3. **Progressive Disclosure**:
-   - Only the skill names and descriptions are initially registered into the agent's context.
-   - The detailed body of a `SKILL.md` is loaded dynamically when activated via `view_file` or when invoked by a subagent.
-   - This prevents context window saturation while making deep operational procedures available on demand.
+| Agent ID | Agent Role | Stage | Assigned Skills (YAML Frontmatter) | Primary Purpose & Usage |
+| :--- | :--- | :---: | :--- | :--- |
+| **`product`** | Product Agent | 1 | `skills/project-planning` | Decomposing product goals into user stories, acceptance criteria (BDD), scope boundaries, and task breakdowns. |
+| **`architect`** | Architect Agent | 1 | `skills/project-planning` | Designing technical topology, dependency mapping, risk mitigation, and freezing interface contracts. |
+| **`uiux`** | UI/UX Agent | 2 | `skills/implementation` | Disciplined design token authoring, component states, and responsive accessibility specs without duplication. |
+| **`frontend`** | Frontend Agent | 3 | `skills/implementation`<br>`skills/iteration` | Disciplined client UI development within isolated worktrees, local checks, browser verification, and defect fixes. |
+| **`backend`** | Backend Agent | 3 | `skills/implementation`<br>`skills/iteration` | Server API logic, strict contract compliance, database integration, service tests, and defect fixes. |
+| **`database`** | Database Agent | 2 | `skills/implementation` | Idempotent migrations, normalized data modeling, indexing, and realistic seed data creation. |
+| **`aiml`** | AI/ML Agent | 3 | `skills/implementation`<br>`skills/iteration` | Structured prompt engineering, model pipelines, evaluation harnesses, and iterative benchmark tuning. |
+| **`qa`** | QA Agent | 4 | `skills/iteration`<br>`skills/code-review` | Executing integration/E2E test suites, browser automation, and reviewing candidate branches for regressions. |
+| **`security`** | Security Agent | 4 | `skills/code-review` | Static application security testing (SAST), secret scanning, dependency CVE audits, and authorization checks. |
+| **`devops`** | DevOps Agent | 5 | `skills/implementation`<br>`skills/iteration` | Containerization, CI/CD pipeline authoring, environment configurations, and iterative deployment verification. |
 
 ---
 
-## 2. Skill Selection & Invocation Models
+## 2. Skill Discovery & Selection Mechanisms
 
-### A. Autonomous Selection (Model Decision)
-- When an agent is confronted with a specific problem domain (e.g. initial requirements scoping, implementation inside a worktree, PR code review), the agent inspects the available skill catalog in its prompt context.
-- If a skill matches the current task, the agent autonomously reads `SKILL.md` to load the detailed procedure.
+### Automatic Skill Selection
+- Antigravity scans `.agents/skills/*/SKILL.md` and indexes their YAML frontmatter (`name`, `description`).
+- Subagents configured with `skills:` in their YAML frontmatter automatically have those skills in their context catalog.
+- When an agent encounters a problem matching a skill's description, the agent autonomously activates the skill and reads `SKILL.md` to guide its procedure.
 
-### B. Explicit Invocation (Orchestrator Mandate)
-- The Lead Orchestrator can explicitly instruct worker subagents to follow a specific skill during dispatch:
+### Explicit Skill Invocation
+- During task dispatch, the Lead Orchestrator can mandate skill execution:
   ```json
   {
     "TypeName": "backend",
     "Role": "Backend Agent",
-    "Prompt": "Implement user auth endpoint following .agents/skills/implementation/SKILL.md..."
+    "Prompt": "Implement the task status transition endpoint following .agents/skills/implementation/SKILL.md and contracts/api.yaml."
   }
   ```
+- This ensures deterministic adherence to factory standards across all subagents.
+
+### Skill Inheritance by Subagents
+- Custom subagents inherit access to the workspace `.agents/skills/` catalog.
+- Subagents declare their primary skill bindings in their YAML frontmatter (`skills: [...]`).
+- When a subagent is launched, its assigned skills provide the operational boundaries and execution steps for that specific turn.
 
 ---
 
-## 3. How Skills Interact with Custom Subagents
+## 3. How the Lead Orchestrator Selects Skills for a Task
 
-While **Custom Subagents** (`.agents/agents/*.md`) define **who** is doing the work (roles, scopes, models, boundaries), **Skills** (`.agents/skills/*/SKILL.md`) define **how** the work is systematically executed.
-
-| Custom Subagent | Primary Associated Skills | Role in Skill Execution |
-| :--- | :--- | :--- |
-| **Product Agent** | `project-planning` | Executes BDD breakdown, defines personas and scope boundaries. |
-| **Architect Agent** | `project-planning`, `code-review` | Derives architecture tasks, reviews contract conformance. |
-| **Frontend Agent** | `implementation`, `iteration` | Operates within worktree following smallest safe change rules. |
-| **Backend Agent** | `implementation`, `iteration` | Operates within worktree following typing and error handling rules. |
-| **QA Agent** | `iteration`, `code-review` | Enforces test matrix and browser verification cycles. |
-| **Security Agent** | `code-review` | Performs SAST and secret scanning audits. |
-| **Lead Orchestrator** | `iteration`, `code-review` | Enforces the 11-stage loop, resolves defect loops, signs off DoD. |
+When decomposing a user request into tasks, the Lead Orchestrator assigns skills according to the operational phase:
+1. **Requirements & Scoping Tasks**: Assign `skills/project-planning` to the Product and Architect agents.
+2. **Implementation in Isolated Worktrees**: Assign `skills/implementation` to Frontend, Backend, AI/ML, and Database agents to enforce smallest safe changes and local type checks.
+3. **Audit & Review Tasks**: Assign `skills/code-review` to QA and Security agents to verify PRD alignment, security vectors, and test validity.
+4. **End-to-End Delivery & Remediation**: Assign `skills/iteration` across all worker agents and QA to enforce the full 11-stage loop.
 
 ---
 
-## 4. Pipeline Integration (Where Skills Fit)
+## 4. How the Iteration Skill Controls Repeated Verification
 
-```mermaid
-flowchart LR
-    subgraph Stage1 ["Stage 1: Inception"]
-        S1["project-planning skill\n(Product & Architect)"]
-    end
+The `iteration` skill operationalizes the core CalmStacks rule:
+> **No feature is complete merely because code compiles.**
 
-    subgraph Stage2 ["Stage 2 & 3: Dev"]
-        S2["implementation skill\n(Frontend, Backend, AI/ML)"]
-    end
-
-    subgraph Stage3 ["Stage 4: Quality & Gates"]
-        S3["code-review skill\n(QA & Security)"]
-    end
-
-    subgraph StageAll ["Continuous Orchestration"]
-        SLoop["iteration skill\n(Lead Orchestrator: 11-Stage Loop & Fix Cycles)"]
-    end
-
-    Stage1 --> Stage2 --> Stage3
-    SLoop -. Coordinates .-> Stage1
-    SLoop -. Coordinates .-> Stage2
-    SLoop -. Coordinates .-> Stage3
-```
-
-- **Inception & Planning**: `project-planning` drives Stage 1.
-- **Worker Execution**: `implementation` governs Stage 3 development inside Git worktrees.
-- **Continuous Quality**: `code-review` enforces Stage 4 review verdicts before integration.
-- **End-to-End Orchestration**: `iteration` provides the overarching 11-stage state machine that drives defect remediation loops until all DoD criteria are satisfied.
+When QA, Security, or local unit tests report a failure:
+1. **Defect Capture**: The failure log, failing test name, and stack trace are captured.
+2. **Targeted Remediation**: The Lead Orchestrator dispatches a fix task to the responsible worker agent's existing worktree.
+3. **Mandatory Re-Verification**: The worker agent applies the fix and re-runs local checks.
+4. **Gate Repeat**: The QA and Security agents re-execute the exact tests that failed, plus the regression suite.
+5. **No Skips**: An agent is never allowed to bypass a failed test or proceed to integration until the verification gate passes with 100% genuine proof.
