@@ -46,8 +46,8 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
     assert.equal(res.body.error.code, 'USER_ALREADY_EXISTS');
   });
 
-  it('POST /api/v1/auth/register - returns 400 Bad Request when password is under 8 chars', async () => {
-    const res = await request(app)
+  it('POST /api/v1/auth/register - returns 400 Bad Request on invalid payload properties (under 8 chars, non-string)', async () => {
+    let res = await request(app)
       .post('/api/v1/auth/register')
       .send({
         email: 'shortpass@example.com',
@@ -55,6 +55,20 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
         full_name: 'Short Pass',
         role: 'client',
         phone: '+919999000003',
+      });
+
+    assert.equal(res.status, 400);
+    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
+
+    // Test non-string email injection
+    res = await request(app)
+      .post('/api/v1/auth/register')
+      .send({
+        email: { "$ne": null },
+        password: 'Password@123',
+        full_name: 'Invalid Input',
+        role: 'client',
+        phone: '+919999000004',
       });
 
     assert.equal(res.status, 400);
@@ -75,8 +89,8 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
     assert.equal(res.body.data.user.role, 'client');
   });
 
-  it('POST /api/v1/auth/login - returns 401 Unauthorized for incorrect password', async () => {
-    const res = await request(app)
+  it('POST /api/v1/auth/login - returns 401/400 for incorrect or malformed payload', async () => {
+    let res = await request(app)
       .post('/api/v1/auth/login')
       .send({
         email: 'client@example.com',
@@ -86,6 +100,17 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
     assert.equal(res.status, 401);
     assert.equal(res.body.data, null);
     assert.equal(res.body.error.code, 'INVALID_CREDENTIALS');
+
+    // Test non-string email injection
+    res = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: { "$ne": null },
+        password: 'Password@123',
+      });
+
+    assert.equal(res.status, 400);
+    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
   });
 
   it('GET /api/v1/auth/me - returns authenticated user profile with valid Bearer token', async () => {
@@ -117,30 +142,4 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
     assert.equal(res.body.error.code, 'UNAUTHORIZED');
   });
 
-  it('POST /api/v1/auth/login - returns 400 Bad Request when email is not a string', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: { "$ne": null },
-        password: 'Password@123',
-      });
-
-    assert.equal(res.status, 400);
-    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
-  });
-
-  it('POST /api/v1/auth/register - returns 400 Bad Request when email is not a string', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        email: { "$ne": null },
-        password: 'Password@123',
-        full_name: 'Invalid Input',
-        role: 'client',
-        phone: '+919999000004',
-      });
-
-    assert.equal(res.status, 400);
-    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
-  });
 });
