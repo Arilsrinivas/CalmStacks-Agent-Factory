@@ -10,9 +10,9 @@ export function seedDatabase(db: DatabaseSync): void {
   }
 
   const saltRounds = 8;
-  const adminHash = bcrypt.hashSync('Admin@12345', saltRounds);
-  const clientHash = bcrypt.hashSync('Client@12345', saltRounds);
-  const advocateHash = bcrypt.hashSync('Advocate@12345', saltRounds);
+  const adminHash = bcrypt.hashSync(process.env.SEED_ADMIN_PASSWORD || 'Admin@12345', saltRounds);
+  const clientHash = bcrypt.hashSync(process.env.SEED_CLIENT_PASSWORD || 'Client@12345', saltRounds);
+  const advocateHash = bcrypt.hashSync(process.env.SEED_ADVOCATE_PASSWORD || 'Advocate@12345', saltRounds);
 
   const insertUser = db.prepare(`
     INSERT INTO users (id, email, password_hash, full_name, role, phone, created_at)

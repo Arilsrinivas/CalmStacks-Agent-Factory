@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 
 -- ----------------------------------------------------------------------------
@@ -47,7 +46,6 @@ CREATE TABLE IF NOT EXISTS advocate_profiles (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_advocate_profiles_user_id ON advocate_profiles(user_id);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_verification_status ON advocate_profiles(verification_status);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_city ON advocate_profiles(city);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_consultation_fee ON advocate_profiles(consultation_fee);
@@ -84,8 +82,6 @@ CREATE TABLE IF NOT EXISTS ai_intake_summaries (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_ai_intake_summaries_intake_id ON ai_intake_summaries(intake_id);
-
 -- ----------------------------------------------------------------------------
 -- 5. Consultation Slots Table
 -- Available calendar windows published by enrolled advocates
@@ -98,10 +94,10 @@ CREATE TABLE IF NOT EXISTS consultation_slots (
     mode VARCHAR(32) NOT NULL DEFAULT 'video' 
         CHECK (mode IN ('audio', 'video', 'in_person')),
     is_booked BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_consultation_slots_time CHECK (end_time > start_time)
 );
 
-CREATE INDEX IF NOT EXISTS idx_consultation_slots_advocate_id ON consultation_slots(advocate_id);
 CREATE INDEX IF NOT EXISTS idx_consultation_slots_start_time ON consultation_slots(start_time);
 CREATE INDEX IF NOT EXISTS idx_consultation_slots_lookup ON consultation_slots(advocate_id, is_booked, start_time);
 
@@ -176,7 +172,7 @@ CREATE TABLE IF NOT EXISTS workspace_messages (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_workspace_messages_workspace_id ON workspace_messages(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_workspace_messages_created_at ON workspace_messages(created_at);
+CREATE INDEX IF NOT EXISTS idx_workspace_messages_workspace_id_created_at ON workspace_messages(workspace_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_workspace_messages_sender_id ON workspace_messages(sender_id);
 
 COMMIT;
