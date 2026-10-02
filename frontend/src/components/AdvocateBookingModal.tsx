@@ -176,10 +176,17 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
               Select Available Appointment Slot
             </label>
             {loadingSlots ? (
-              <div className="text-xs text-slate-400 py-4 text-center">Loading advocate calendar...</div>
+              <div className="text-center py-8 text-slate-400">
+                <div className="inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+                <p className="text-xs">Loading advocate calendar...</p>
+              </div>
             ) : slots.length === 0 ? (
-              <div className="text-xs text-rose-400 bg-rose-950/20 border border-rose-900/40 p-3 rounded-lg text-center">
-                No open slots available for this week. Please check another advocate.
+              <div className="bg-rose-950/20 border border-rose-900/40 rounded-xl p-6 text-center text-rose-400">
+                <div className="text-3xl mb-2">📅</div>
+                <h3 className="text-sm font-bold text-rose-400 font-serif">No Open Slots</h3>
+                <p className="text-xs max-w-md mx-auto mt-1">
+                  No open slots are available for this week. Please check another advocate.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-48 overflow-y-auto pr-1">
@@ -251,13 +258,21 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting || !selectedSlotId || slots.length === 0}
-              className={`px-5 py-2.5 rounded-lg text-xs font-bold shadow-lg transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2.5 rounded-lg text-xs font-bold shadow-lg transition-all ${
                 isSubmitting || !selectedSlotId || slots.length === 0
                   ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
                   : 'bg-amber-600 hover:bg-amber-500 text-slate-950 cursor-pointer shadow-amber-900/30'
               }`}
             >
-              {isSubmitting ? 'Confirming Booking...' : 'Confirm Appointment & Open Workspace'}
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Confirming Booking...</span>
+                </>
+              ) : 'Confirm Appointment & Open Workspace'}
             </button>
           </div>
         </form>

@@ -136,10 +136,17 @@ export const AdminPortal: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="text-xs text-slate-400 py-8 text-center">Loading verification requests...</div>
+          <div className="text-center py-16 text-slate-400">
+            <div className="inline-block w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+            <p className="text-sm">Loading verification requests...</p>
+          </div>
         ) : pendingAdvocates.length === 0 ? (
-          <div className="text-xs text-emerald-400 py-8 text-center bg-slate-950 rounded-lg border border-slate-800">
-            ✓ All advocate credentials have been reviewed. Queue is clear!
+          <div className="bg-slate-950 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+            <div className="text-3xl mb-2 text-emerald-400">✓</div>
+            <h3 className="text-sm font-bold text-emerald-400 font-serif">Queue is Clear</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
+              All advocate credentials have been reviewed and processed.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">

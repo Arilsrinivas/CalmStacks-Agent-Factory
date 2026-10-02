@@ -114,10 +114,17 @@ export const AdvocateDashboard: React.FC<AdvocateDashboardProps> = ({
         </div>
 
         {loading ? (
-          <div className="text-xs text-slate-400 py-8 text-center">Loading consultation requests...</div>
+          <div className="text-center py-16 text-slate-400">
+            <div className="inline-block w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+            <p className="text-sm">Loading consultation requests...</p>
+          </div>
         ) : consultations.length === 0 ? (
-          <div className="text-xs text-slate-400 py-8 text-center bg-slate-950 rounded-lg">
-            No incoming consultation requests at this time.
+          <div className="bg-slate-950 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+            <div className="text-3xl mb-2">📅</div>
+            <h3 className="text-sm font-bold text-white font-serif">No Consultation Requests</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
+              There are no incoming consultation requests at this time.
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-slate-800">
@@ -265,8 +272,18 @@ export const AdvocateDashboard: React.FC<AdvocateDashboardProps> = ({
         <h2 className="text-base font-bold text-white uppercase tracking-wider mb-4">
           Privileged Case Docket Workspaces ({workspaces.length})
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {workspaces.map((w) => (
+
+        {workspaces.length === 0 ? (
+          <div className="bg-slate-950 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+            <div className="text-3xl mb-2">📁</div>
+            <h3 className="text-sm font-bold text-white font-serif">No Active Workspaces</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
+              You do not have any active case docket workspaces yet.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {workspaces.map((w) => (
             <div
               key={w.id}
               className="bg-slate-950 border border-slate-800 p-4 rounded-lg flex flex-col justify-between"
@@ -301,7 +318,8 @@ export const AdvocateDashboard: React.FC<AdvocateDashboardProps> = ({
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
