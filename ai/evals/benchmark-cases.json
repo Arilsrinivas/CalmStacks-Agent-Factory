@@ -1,0 +1,144 @@
+[
+  {
+    "id": "CASE-IN-001",
+    "case_title": "Dishonour of Cheque (Section 138 Negotiable Instruments Act)",
+    "raw_narrative": "My name is Rajesh Gupta. In March 2025, I lent a friendly commercial loan of INR 5,00,000 to my business acquaintance Mr. Ramesh Kumar against his promise to return within 3 months. On 10th June 2025, he issued a signed cheque drawn on HDFC Bank for INR 5,00,000. When I presented the cheque on 15th June 2025 at my bank in Bengaluru, it was dishonoured and returned with the bank return memo stating 'Funds Insufficient'. I immediately contacted him but he ignored my calls. On 2nd July 2025, within 30 days of the dishonour memo, I sent a formal statutory demand notice via registered speed post demanding payment within 15 days. He received the notice on 5th July 2025 but failed to make any payment even after the 15 days elapsed. I want to recover my full 5,00,000 INR with interest and initiate criminal prosecution under Section 138 of the Negotiable Instruments Act.",
+    "expected": {
+      "primary_practice_area": "Banking & Cheque Bounce / Sec 138 NI Act",
+      "acceptable_practice_areas": [
+        "Banking & Cheque Bounce / Sec 138 NI Act"
+      ],
+      "suggested_forums": [
+        "Metropolitan Magistrate Court / Judicial Magistrate First Class (JMFC)",
+        "Negotiable Instruments Act Special Court"
+      ],
+      "parties": {
+        "client_role": "Complainant / Payee",
+        "opposing_party": "Ramesh Kumar",
+        "relationship": "Payee - Drawer"
+      },
+      "key_relief_keywords": [
+        "cheque",
+        "Section 138",
+        "recovery",
+        "interest"
+      ],
+      "min_timeline_entries": 2,
+      "statutory_disclaimer_required": true
+    }
+  },
+  {
+    "id": "CASE-IN-002",
+    "case_title": "Delay in Flat Possession & Builder Dispute (RERA / Consumer Commission)",
+    "raw_narrative": "We booked a 3BHK flat in the Green Heights project developed by Omex Builders in Whitefield, Bengaluru in 2021. As per the registered builder-buyer agreement, the promised date of possession was December 2023 with a 6-month grace period ending June 2024. Till date, I have already paid 85% of the total flat cost amounting to Rs. 65 Lakhs out of total 76 Lakhs through home loan disbarments. The construction work at the project site has been completely abandoned since 15 months. The builder has not obtained the Occupancy Certificate (OC) or Completion Certificate. On 12th January 2025, we visited their corporate office, but the management gave vague answers and refused to commit to a delivery date. We seek immediate refund of our 65 Lakhs with 18% delayed possession interest under Section 18 of RERA, or alternatively immediate handover with compensation for mental agony.",
+    "expected": {
+      "primary_practice_area": "Real Estate & RERA",
+      "acceptable_practice_areas": [
+        "Real Estate & RERA",
+        "Consumer Protection"
+      ],
+      "suggested_forums": [
+        "Real Estate Regulatory Authority (RERA)",
+        "District Consumer Disputes Redressal Commission"
+      ],
+      "parties": {
+        "client_role": "Allottee / Homebuyer",
+        "opposing_party": "Omex Builders",
+        "relationship": "Homebuyer - Real Estate Promoter"
+      },
+      "key_relief_keywords": [
+        "refund",
+        "possession",
+        "RERA",
+        "interest"
+      ],
+      "min_timeline_entries": 2,
+      "statutory_disclaimer_required": true
+    }
+  },
+  {
+    "id": "CASE-IN-003",
+    "case_title": "Matrimonial Mutual Consent Divorce & Maintenance (Hindu Marriage Act)",
+    "raw_narrative": "I got married to my husband Rajiv in November 2020 according to Hindu rites and ceremonies in New Delhi. Due to irreconcilable temperamental differences and incompatibility, we have been living separately since January 2024. After extensive family mediation in March 2025, we have both agreed that the marriage has broken down irretrievably and we wish to dissolve it peacefully through mutual consent divorce under Section 13B of the Hindu Marriage Act. We have a 3-year-old daughter. We have tentatively settled terms where Rajiv will pay a one-time permanent alimony and maintenance settlement of INR 35,00,000 for child education and support, and we need a court-sanctioned agreement for joint legal custody with weekend visitation rights for him.",
+    "expected": {
+      "primary_practice_area": "Matrimonial & Family Law",
+      "acceptable_practice_areas": [
+        "Matrimonial & Family Law"
+      ],
+      "suggested_forums": [
+        "Family Court"
+      ],
+      "parties": {
+        "client_role": "Petitioner / Wife",
+        "opposing_party": "Rajiv",
+        "relationship": "Spouses married under Hindu Marriage Act"
+      },
+      "key_relief_keywords": [
+        "divorce",
+        "Section 13B",
+        "maintenance",
+        "custody"
+      ],
+      "min_timeline_entries": 2,
+      "statutory_disclaimer_required": true
+    }
+  },
+  {
+    "id": "CASE-IN-004",
+    "case_title": "Wrongful Termination & Gratuity Recovery (Labour/Employment Dispute)",
+    "raw_narrative": "I worked as a Lead Software Architect at Zenith Technologies Ltd in Cyber City, Gurugram continuously for 6 years since joining in August 2019. On 10th February 2026, without any prior performance notice or inquiry, the HR department abruptly handed me a termination letter effective immediately. My employment contract mandates a 3-month notice period or equivalent severance pay in lieu of notice. The company has refused to pay my 3 months severance pay and has illegally withheld my statutory gratuity accumulated over 6 years of continuous service under the Payment of Gratuity Act, 1972, along with 2 months unpaid salary arrears. Total withheld dues exceed 9,50,000 INR. I need to claim my statutory gratuity with 10% penal interest, notice pay severance, and unpaid salary arrears.",
+    "expected": {
+      "primary_practice_area": "Labour & Employment",
+      "acceptable_practice_areas": [
+        "Labour & Employment"
+      ],
+      "suggested_forums": [
+        "Labour Court / Industrial Tribunal",
+        "Controlling Authority under Payment of Gratuity Act, 1972"
+      ],
+      "parties": {
+        "client_role": "Aggrieved Employee",
+        "opposing_party": "Zenith Technologies Ltd",
+        "relationship": "Employee - Employer"
+      },
+      "key_relief_keywords": [
+        "gratuity",
+        "severance",
+        "Payment of Gratuity Act",
+        "salary arrears"
+      ],
+      "min_timeline_entries": 2,
+      "statutory_disclaimer_required": true
+    }
+  },
+  {
+    "id": "CASE-IN-005",
+    "case_title": "Commercial Trademark Infringement & Passing Off",
+    "raw_narrative": "Our company VedaRoots Herbal Enterprises has been manufacturing and distributing registered ayurvedic skincare products under the registered trademark 'VEDA-GLOW' across India since 2018. We hold valid Class 3 and Class 5 trademark registrations. In December 2024, we discovered that a competing manufacturer Apex Remedies Pvt Ltd has launched a counterfeit product under the deceptively similar brand name 'VEDHA GLOW' using identical trade dress, bottle packaging, and color scheme. This blatant trademark infringement and passing off is causing massive consumer confusion in retail stores and online marketplaces, causing heavy loss of business and brand reputation. On 5th January 2025, we served a cease and desist notice, but they rejected it and expanded their distribution. We urgently need an interim and permanent injunction restraining them from using the infringing trademark, rendition of accounts of their illicit profits, seizure of counterfeit stock, and damages.",
+    "expected": {
+      "primary_practice_area": "Intellectual Property",
+      "acceptable_practice_areas": [
+        "Intellectual Property",
+        "Corporate & Contractual"
+      ],
+      "suggested_forums": [
+        "Commercial Court (under Commercial Courts Act, 2015)",
+        "High Court (Commercial Division / Intellectual Property Division)"
+      ],
+      "parties": {
+        "client_role": "Registered Trademark Owner",
+        "opposing_party": "Apex Remedies Pvt Ltd",
+        "relationship": "Brand Owner - Unauthorized Infringer / Competitor"
+      },
+      "key_relief_keywords": [
+        "injunction",
+        "trademark",
+        "passing off",
+        "damages",
+        "accounts of profits"
+      ],
+      "min_timeline_entries": 2,
+      "statutory_disclaimer_required": true
+    }
+  }
+]

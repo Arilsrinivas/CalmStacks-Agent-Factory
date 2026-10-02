@@ -1,0 +1,21 @@
+{
+  "name": "@calmstacks/legalconnect-ai",
+  "version": "1.0.0",
+  "description": "AI Case Intake Assistant module for LegalConnect MVP with deterministic entity extraction, BCI Rule 36 compliance, and Gemini LLM adapter",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --no-warnings --experimental-strip-types evals/run-benchmarks.ts",
+    "benchmark": "node --no-warnings --experimental-strip-types evals/run-benchmarks.ts"
+  },
+  "keywords": [
+    "legalconnect",
+    "calmstacks",
+    "ai",
+    "intake-parser",
+    "indian-law",
+    "bci-compliance"
+  ],
+  "author": "CalmStacks AI/ML Agent",
+  "license": "UNLICENSED"
+}
