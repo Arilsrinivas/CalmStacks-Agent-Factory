@@ -34,6 +34,7 @@ STRICT LEGAL & ETHICAL BOUNDARIES (Bar Council of India Rule 36 Compliance):
 1. You are a procedural data normalizer. You do NOT provide legal advice, opinion, probability of winning, or strategy.
 2. Extract ONLY factual assertions, named parties, chronological dates, and relief explicitly or implicitly requested.
 3. Every response MUST strictly adhere to the JSON schema below.
+4. Output ONLY pure JSON. Do not include markdown formatting (like \`\`\`json), code blocks, or explanatory text.
 
 JSON Schema:
 {
@@ -85,8 +86,22 @@ export async function processIntakeWithAdapter(
   const timeoutMs = options.timeoutMs || DEFAULT_TIMEOUT_MS;
 
   try {
-    const response = await callGeminiAPI(rawText, apiKey, model, timeoutMs);
+    let response = await callGeminiAPI(rawText, apiKey, model, timeoutMs);
+
+    // Strip markdown formatting if the LLM hallucinated it
+    response = response.trim();
+    if (response.startsWith('```json')) {
+      response = response.replace(/^```json\s*/i, '').replace(/\s*```$/, '');
+    } else if (response.startsWith('```')) {
+      response = response.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
     const parsedJson = JSON.parse(response);
+
+    // Ensure parsed JSON is an object
+    if (!parsedJson || typeof parsedJson !== 'object' || Array.isArray(parsedJson)) {
+      throw new Error('Gemini API returned malformed JSON: Expected an object');
+    }
 
     // Validate and sanitize Gemini JSON
     const structuredResult: StructuredCaseIntake = {
@@ -128,7 +143,8 @@ export async function processIntakeWithAdapter(
       ...structuredResult,
       adapter_used: 'gemini',
     };
-  } catch (_error) {
+  } catch (error) {
+    console.warn(`[Gemini Adapter Fallback] Error processing with LLM: ${error instanceof Error ? error.message : String(error)}`);
     // Graceful fallback to deterministic local extractor
     const fallbackResult = parseLegalIntake(rawText, options);
     return {
@@ -167,7 +183,7 @@ async function callGeminiAPI(
         },
       ],
       generationConfig: {
-        temperature: 0.1,
+        temperature: 0.0,
         response_mime_type: 'application/json',
       },
     };
@@ -182,7 +198,8 @@ async function callGeminiAPI(
     });
 
     if (!res.ok) {
-      throw new Error(`Gemini API returned HTTP status ${res.status}: ${res.statusText}`);
+      const errorText = await res.text();
+      throw new Error(`Gemini API returned HTTP status ${res.status}: ${res.statusText} - ${errorText}`);
     }
 
     const data: any = await res.json();
