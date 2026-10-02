@@ -28,7 +28,7 @@ export function verifyToken(token: string): AuthenticatedUserPayload {
 
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
     throw new AppError(401, 'UNAUTHORIZED', 'Authorization header with Bearer token is required');
   }
 
