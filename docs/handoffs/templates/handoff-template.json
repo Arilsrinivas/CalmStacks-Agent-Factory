@@ -1,0 +1,28 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "task_id": "TASK-000",
+  "epic": "example-epic",
+  "agent": "Backend Agent",
+  "branch": "feature/example-epic/backend",
+  "status": "READY_FOR_REVIEW",
+  "timestamp": "2026-10-02T12:00:00Z",
+  "changes": {
+    "files_created": [],
+    "files_modified": [],
+    "files_deleted": []
+  },
+  "contracts_consumed": [
+    "contracts/api.yaml"
+  ],
+  "contracts_produced": [],
+  "verification": {
+    "type_check_passed": true,
+    "linter_passed": true,
+    "unit_tests_run": 0,
+    "unit_tests_passed": 0,
+    "test_command": "pytest",
+    "test_log_path": "docs/reports/qa/test.log"
+  },
+  "known_limitations": [],
+  "downstream_actions": []
+}

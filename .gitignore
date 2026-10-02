@@ -1,0 +1,40 @@
+﻿# CalmStacks Agent Factory .gitignore
+
+# Git Worktrees (Isolated agent working directories)
+.worktrees/
+
+# Dependencies & Environments
+node_modules/
+.pnpm-store/
+.venv/
+env/
+venv/
+__pycache__/
+*.pyc
+
+# Build outputs & caches
+dist/
+build/
+out/
+.cache/
+*.log
+
+# Environment variables & secrets (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+secrets/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,107 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
+  "factory": "CalmStacks Agent Factory",
+  "agents": [
+    {
+      "id": "product-agent",
+      "name": "Product Agent",
+      "role": "Requirements, PRD, and Acceptance Criteria",
+      "stage": 1,
+      "spec_file": ".agents/specs/product-agent.md",
+      "scope_allowed": ["docs/prd/", "specs/"],
+      "parallel_compatible": false,
+      "requires_worktree": false
+    },
+    {
+      "id": "architect-agent",
+      "name": "Architect Agent",
+      "role": "System Architecture, Contracts, and ADRs",
+      "stage": 1,
+      "spec_file": ".agents/specs/architect-agent.md",
+      "scope_allowed": ["contracts/", "docs/architecture/", "docs/adr/"],
+      "parallel_compatible": false,
+      "requires_worktree": false
+    },
+    {
+      "id": "ui-ux-agent",
+      "name": "UI/UX Agent",
+      "role": "Design Systems, Tokens, and Interaction Flows",
+      "stage": 2,
+      "spec_file": ".agents/specs/ui-ux-agent.md",
+      "scope_allowed": ["design/", "docs/ui/"],
+      "parallel_compatible": true,
+      "requires_worktree": false
+    },
+    {
+      "id": "database-agent",
+      "name": "Database Agent",
+      "role": "Data Models, Migrations, and Seed Data",
+      "stage": 2,
+      "spec_file": ".agents/specs/database-agent.md",
+      "scope_allowed": ["database/", "contracts/schema.sql"],
+      "parallel_compatible": true,
+      "requires_worktree": false
+    },
+    {
+      "id": "frontend-agent",
+      "name": "Frontend Agent",
+      "role": "Client Application, UI Components, Client Tests",
+      "stage": 3,
+      "spec_file": ".agents/specs/frontend-agent.md",
+      "scope_allowed": ["frontend/", "web/", "apps/web/"],
+      "parallel_compatible": true,
+      "requires_worktree": true
+    },
+    {
+      "id": "backend-agent",
+      "name": "Backend Agent",
+      "role": "Server APIs, Business Logic, Service Tests",
+      "stage": 3,
+      "spec_file": ".agents/specs/backend-agent.md",
+      "scope_allowed": ["backend/", "server/", "services/"],
+      "parallel_compatible": true,
+      "requires_worktree": true
+    },
+    {
+      "id": "ai-ml-agent",
+      "name": "AI/ML Agent",
+      "role": "Prompts, Model Pipelines, Evals",
+      "stage": 3,
+      "spec_file": ".agents/specs/ai-ml-agent.md",
+      "scope_allowed": ["ai/", "ml/", "evals/"],
+      "parallel_compatible": true,
+      "requires_worktree": true
+    },
+    {
+      "id": "qa-agent",
+      "name": "QA Agent",
+      "role": "E2E, Integration, and Contract Testing",
+      "stage": 4,
+      "spec_file": ".agents/specs/qa-agent.md",
+      "scope_allowed": ["tests/", "e2e/", "docs/reports/qa/"],
+      "parallel_compatible": true,
+      "requires_worktree": false
+    },
+    {
+      "id": "security-agent",
+      "name": "Security Agent",
+      "role": "SAST, Secret Scanning, Vulnerability Auditing",
+      "stage": 4,
+      "spec_file": ".agents/specs/security-agent.md",
+      "scope_allowed": ["docs/reports/security/", ".security/"],
+      "parallel_compatible": true,
+      "requires_worktree": false
+    },
+    {
+      "id": "devops-agent",
+      "name": "DevOps Agent",
+      "role": "CI/CD, Docker, Deployment Automation",
+      "stage": 5,
+      "spec_file": ".agents/specs/devops-agent.md",
+      "scope_allowed": [".github/workflows/", "deploy/", "Dockerfile", "docker-compose.yml"],
+      "parallel_compatible": false,
+      "requires_worktree": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+﻿openapi: 3.1.0
+info:
+  title: CalmStacks Feature API Contract
+  version: 1.0.0
+  description: Formal API contract defining request/response structures between Frontend and Backend agents.
+paths:
+  /api/v1/health:
+    get:
+      summary: Health check endpoint
+      operationId: getHealth
+      responses:
+        '200':
+          description: Service operational
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  timestamp:
+                    type: string
+                    format: date-time
+                required:
+                  - status
+                  - timestamp
