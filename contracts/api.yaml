@@ -1,0 +1,1450 @@
+openapi: 3.1.0
+info:
+  title: LegalConnect MVP API Contract
+  version: 1.0.0
+  description: >
+    Formal machine-readable OpenAPI 3.1 specification for LegalConnect by CalmStacks.
+    Governs inter-agent contracts for Citizen/MSME Legal Intake, BCI Rule 36 Directory Search,
+    Consultation Scheduling, Persistent Case Workspaces, and Admin Verification.
+servers:
+  - url: http://localhost:4000
+    description: Local Development / Test Gateway
+
+paths:
+  # ---------------------------------------------------------------------------
+  # Authentication & Identity Endpoints
+  # ---------------------------------------------------------------------------
+  /api/v1/auth/register:
+    post:
+      summary: Register a new user (Client, Advocate, or Admin)
+      operationId: registerUser
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRequest'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+
+  /api/v1/auth/login:
+    post:
+      summary: Authenticate user credentials and issue JWT
+      operationId: loginUser
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /api/v1/auth/me:
+    get:
+      summary: Retrieve authenticated user profile and roles
+      operationId: getCurrentUser
+      tags: [Authentication]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  # ---------------------------------------------------------------------------
+  # Case Intake & AI Processing Endpoints
+  # ---------------------------------------------------------------------------
+  /api/v1/intake/submit:
+    post:
+      summary: Submit plain-language legal narrative for AI extraction
+      operationId: submitCaseIntake
+      tags: [Case Intake & AI]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntakeSubmissionRequest'
+      responses:
+        '201':
+          description: Intake accepted and structured summary generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntakeSummaryEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /api/v1/intake/{id}/summary:
+    get:
+      summary: Retrieve AI-generated structured summary with statutory disclaimer
+      operationId: getIntakeSummary
+      tags: [Case Intake & AI]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The intake ID
+      responses:
+        '200':
+          description: Structured intake summary details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntakeSummaryEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  /api/v1/intake/{id}/practice-areas:
+    get:
+      summary: Retrieve suggested practice areas and forum classifications
+      operationId: getIntakePracticeAreas
+      tags: [Case Intake & AI]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The intake ID
+      responses:
+        '200':
+          description: List of suggested practice areas for directory pre-filtering
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PracticeAreasEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  # ---------------------------------------------------------------------------
+  # Advocates Directory Endpoints (BCI Rule 36 Compliant)
+  # ---------------------------------------------------------------------------
+  /api/v1/advocates:
+    get:
+      summary: Search and filter verified advocates (Unranked directory)
+      operationId: listAdvocates
+      tags: [Advocates Directory]
+      parameters:
+        - name: practice_area
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by practice area (e.g. Property, Family, Consumer, Corporate)
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by city location
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by consultation language
+        - name: min_exp
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Minimum years of active standing
+        - name: fee
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Maximum consultation fee in INR
+      responses:
+        '200':
+          description: List of verified advocates matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvocateListEnvelope'
+
+  /api/v1/advocates/{id}:
+    get:
+      summary: Get verified advocate public profile
+      operationId: getAdvocateProfile
+      tags: [Advocates Directory]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Advocate profile ID
+      responses:
+        '200':
+          description: Advocate factual profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvocateProfileEnvelope'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  /api/v1/advocates/{id}/slots:
+    get:
+      summary: List open consultation availability slots for advocate
+      operationId: getAdvocateSlots
+      tags: [Advocates Directory]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Advocate profile ID
+      responses:
+        '200':
+          description: Available consultation time slots
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationSlotListEnvelope'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  # ---------------------------------------------------------------------------
+  # Consultations & Booking Endpoints
+  # ---------------------------------------------------------------------------
+  /api/v1/consultations:
+    get:
+      summary: List consultations for authenticated client or advocate
+      operationId: listConsultations
+      tags: [Consultations]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of consultations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationListEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+    post:
+      summary: Book a consultation slot and auto-provision case workspace
+      operationId: createConsultation
+      tags: [Consultations]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsultationBookingRequest'
+      responses:
+        '201':
+          description: Consultation booked and workspace created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationCreatedEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+
+  /api/v1/consultations/{id}:
+    get:
+      summary: Retrieve specific consultation booking details
+      operationId: getConsultation
+      tags: [Consultations]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Consultation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  /api/v1/consultations/{id}/status:
+    patch:
+      summary: Update consultation status (Accept, Reschedule, Complete, Cancel)
+      operationId: updateConsultationStatus
+      tags: [Consultations]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsultationStatusUpdateRequest'
+      responses:
+        '200':
+          description: Consultation status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsultationEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  # ---------------------------------------------------------------------------
+  # Case Workspaces & Secure Collaboration Endpoints
+  # ---------------------------------------------------------------------------
+  /api/v1/workspaces:
+    get:
+      summary: List all active case workspaces for authenticated participant
+      operationId: listWorkspaces
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /api/v1/workspaces/{id}:
+    get:
+      summary: Retrieve workspace details, status, and linked intake dossier
+      operationId: getWorkspace
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Workspace details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  /api/v1/workspaces/{id}/documents:
+    get:
+      summary: List all uploaded documents in workspace document vault
+      operationId: listWorkspaceDocuments
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Documents list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDocumentListEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+    post:
+      summary: Upload an evidentiary or notice document to workspace vault
+      operationId: uploadWorkspaceDocument
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUploadRequest'
+      responses:
+        '201':
+          description: Document uploaded and indexed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDocumentEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+
+  /api/v1/workspaces/{id}/messages:
+    get:
+      summary: Retrieve chronological privileged messages for workspace
+      operationId: listWorkspaceMessages
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Message thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMessageListEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+    post:
+      summary: Send secure message in workspace thread
+      operationId: sendWorkspaceMessage
+      tags: [Case Workspaces]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreateRequest'
+      responses:
+        '201':
+          description: Message posted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMessageEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+
+  # ---------------------------------------------------------------------------
+  # Admin Verification & Platform Moderation Endpoints
+  # ---------------------------------------------------------------------------
+  /api/v1/admin/advocates/pending:
+    get:
+      summary: List advocate profiles pending Bar Council credential verification
+      operationId: listPendingAdvocates
+      tags: [Admin Moderation]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Pending advocate applications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendingAdvocateListEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+
+  /api/v1/admin/advocates/{id}/verify:
+    patch:
+      summary: Verify or reject advocate Bar Council credentials
+      operationId: verifyAdvocateProfile
+      tags: [Admin Moderation]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminVerificationRequest'
+      responses:
+        '200':
+          description: Advocate verification status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvocateProfileEnvelope'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+
+  /api/v1/admin/analytics:
+    get:
+      summary: Retrieve platform health and aggregate operational metrics
+      operationId: getAdminAnalytics
+      tags: [Admin Moderation]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: System health and intake metrics (BCI non-promotional)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAnalyticsEnvelope'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+
+# -----------------------------------------------------------------------------
+# Components & Reusable Data Schemas
+# -----------------------------------------------------------------------------
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    400BadRequest:
+      description: Bad request or validation failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    401Unauthorized:
+      description: Authentication credentials missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    403Forbidden:
+      description: Insufficient permissions or privilege violation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    404NotFound:
+      description: Requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    409Conflict:
+      description: Resource conflict or double-booking detected
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+
+  schemas:
+    # -------------------------------------------------------------------------
+    # Base Error and Envelope Models
+    # -------------------------------------------------------------------------
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_FAILED"
+        message:
+          type: string
+          example: "The provided phone number is invalid."
+        details:
+          type: object
+          additionalProperties: true
+      required:
+        - code
+        - message
+
+    ErrorEnvelope:
+      type: object
+      properties:
+        data:
+          type: "null"
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Authentication & User Models
+    # -------------------------------------------------------------------------
+    UserRole:
+      type: string
+      enum: [client, advocate, admin]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        phone:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - full_name
+        - role
+        - phone
+        - created_at
+
+    UserRegistrationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        full_name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        phone:
+          type: string
+      required:
+        - email
+        - password
+        - full_name
+        - role
+        - phone
+
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            user:
+              $ref: '#/components/schemas/User'
+          required:
+            - token
+            - user
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    UserProfileEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/User'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Advocate Profile Models
+    # -------------------------------------------------------------------------
+    VerificationStatus:
+      type: string
+      enum: [pending, verified, rejected, suspended]
+
+    AdvocateProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        full_name:
+          type: string
+        bar_council_enrollment:
+          type: string
+          example: "D/1234/2015"
+        state_bar_council:
+          type: string
+          example: "Bar Council of Delhi"
+        experience_years:
+          type: integer
+          example: 10
+        practice_areas:
+          type: array
+          items:
+            type: string
+          example: ["Property & Real Estate", "Civil Litigation"]
+        courts:
+          type: array
+          items:
+            type: string
+          example: ["Delhi High Court", "Tis Hazari District Court"]
+        languages:
+          type: array
+          items:
+            type: string
+          example: ["English", "Hindi"]
+        city:
+          type: string
+          example: "New Delhi"
+        state:
+          type: string
+          example: "Delhi"
+        consultation_fee:
+          type: number
+          example: 1500.00
+        bio:
+          type: string
+        verification_status:
+          $ref: '#/components/schemas/VerificationStatus'
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - user_id
+        - bar_council_enrollment
+        - state_bar_council
+        - experience_years
+        - practice_areas
+        - courts
+        - languages
+        - city
+        - state
+        - consultation_fee
+        - verification_status
+        - created_at
+
+    AdvocateProfileEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AdvocateProfile'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    AdvocateListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdvocateProfile'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Case Intake & AI Summary Models
+    # -------------------------------------------------------------------------
+    IntakeStatus:
+      type: string
+      enum: [draft, submitted, linked_to_consultation, closed]
+
+    CaseIntake:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        raw_problem_description:
+          type: string
+        preferred_language:
+          type: string
+        status:
+          $ref: '#/components/schemas/IntakeStatus'
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - client_id
+        - raw_problem_description
+        - preferred_language
+        - status
+        - created_at
+
+    IntakeSubmissionRequest:
+      type: object
+      properties:
+        raw_problem_description:
+          type: string
+          minLength: 15
+          example: "Landlord in Bengaluru is refusing to return my security deposit of 80000 INR."
+        preferred_language:
+          type: string
+          default: "en"
+      required:
+        - raw_problem_description
+
+    AIIntakeSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        intake_id:
+          type: string
+        facts_summary:
+          type: string
+        parties_involved:
+          type: object
+          properties:
+            client_role:
+              type: string
+            opposing_party:
+              type: string
+            dispute_nature:
+              type: string
+          required:
+            - client_role
+            - opposing_party
+        key_relief_sought:
+          type: string
+        suggested_practice_areas:
+          type: array
+          items:
+            type: string
+        disclaimer_accepted:
+          type: boolean
+        statutory_disclaimer:
+          type: string
+          example: "This summary is automatically synthesized solely to organize factual statements. The AI does NOT provide legal advice."
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - intake_id
+        - facts_summary
+        - parties_involved
+        - key_relief_sought
+        - suggested_practice_areas
+        - disclaimer_accepted
+        - statutory_disclaimer
+        - created_at
+
+    IntakeSummaryEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AIIntakeSummary'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    PracticeAreasEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: string
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Consultation Slots & Bookings Models
+    # -------------------------------------------------------------------------
+    ConsultationMode:
+      type: string
+      enum: [audio, video, in_person]
+
+    ConsultationStatus:
+      type: string
+      enum: [requested, confirmed, reschedule_offered, declined, completed, cancelled]
+
+    ConsultationSlot:
+      type: object
+      properties:
+        id:
+          type: string
+        advocate_id:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        mode:
+          $ref: '#/components/schemas/ConsultationMode'
+        is_booked:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - advocate_id
+        - start_time
+        - end_time
+        - mode
+        - is_booked
+        - created_at
+
+    ConsultationSlotListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsultationSlot'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    Consultation:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        advocate_id:
+          type: string
+        slot_id:
+          type: string
+        scheduled_at:
+          type: string
+          format: date-time
+        mode:
+          $ref: '#/components/schemas/ConsultationMode'
+        notes:
+          type: string
+        status:
+          $ref: '#/components/schemas/ConsultationStatus'
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - client_id
+        - advocate_id
+        - slot_id
+        - scheduled_at
+        - mode
+        - status
+        - created_at
+
+    ConsultationBookingRequest:
+      type: object
+      properties:
+        advocate_id:
+          type: string
+        slot_id:
+          type: string
+        intake_id:
+          type: string
+        mode:
+          $ref: '#/components/schemas/ConsultationMode'
+        notes:
+          type: string
+      required:
+        - advocate_id
+        - slot_id
+        - mode
+
+    ConsultationStatusUpdateRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ConsultationStatus'
+        notes:
+          type: string
+      required:
+        - status
+
+    ConsultationEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Consultation'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    ConsultationListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Consultation'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    ConsultationCreatedEnvelope:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            consultation:
+              $ref: '#/components/schemas/Consultation'
+            workspace_id:
+              type: string
+          required:
+            - consultation
+            - workspace_id
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Case Workspace & Collaboration Models
+    # -------------------------------------------------------------------------
+    WorkspaceStatus:
+      type: string
+      enum: [active, advisory_issued, closed]
+
+    CaseWorkspace:
+      type: object
+      properties:
+        id:
+          type: string
+        consultation_id:
+          type: string
+        client_id:
+          type: string
+        advocate_id:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/WorkspaceStatus'
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - consultation_id
+        - client_id
+        - advocate_id
+        - title
+        - status
+        - created_at
+
+    WorkspaceEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CaseWorkspace'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    WorkspaceListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseWorkspace'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    CaseDocument:
+      type: object
+      properties:
+        id:
+          type: string
+        workspace_id:
+          type: string
+        uploaded_by_user_id:
+          type: string
+        file_name:
+          type: string
+        file_url:
+          type: string
+        file_size_bytes:
+          type: integer
+        mime_type:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - workspace_id
+        - uploaded_by_user_id
+        - file_name
+        - file_url
+        - file_size_bytes
+        - mime_type
+        - created_at
+
+    DocumentUploadRequest:
+      type: object
+      properties:
+        file_name:
+          type: string
+        file_url:
+          type: string
+        file_size_bytes:
+          type: integer
+        mime_type:
+          type: string
+      required:
+        - file_name
+        - file_url
+        - file_size_bytes
+        - mime_type
+
+    WorkspaceDocumentEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CaseDocument'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    WorkspaceDocumentListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseDocument'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    WorkspaceMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        workspace_id:
+          type: string
+        sender_id:
+          type: string
+        message_text:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: object
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - workspace_id
+        - sender_id
+        - message_text
+        - created_at
+
+    MessageCreateRequest:
+      type: object
+      properties:
+        message_text:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: object
+      required:
+        - message_text
+
+    WorkspaceMessageEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/WorkspaceMessage'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    WorkspaceMessageListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceMessage'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    # -------------------------------------------------------------------------
+    # Admin Moderation & Analytics Models
+    # -------------------------------------------------------------------------
+    AdminVerificationRequest:
+      type: object
+      properties:
+        verification_status:
+          type: string
+          enum: [verified, rejected]
+        notes:
+          type: string
+      required:
+        - verification_status
+
+    PendingAdvocateListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdvocateProfile'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
+
+    AdminAnalyticsResponse:
+      type: object
+      properties:
+        total_registered_users:
+          type: integer
+        total_verified_advocates:
+          type: integer
+        pending_verifications_count:
+          type: integer
+        total_intakes_submitted:
+          type: integer
+        total_consultations_booked:
+          type: integer
+        active_workspaces_count:
+          type: integer
+        practice_area_breakdown:
+          type: object
+          additionalProperties:
+            type: integer
+      required:
+        - total_registered_users
+        - total_verified_advocates
+        - pending_verifications_count
+        - total_intakes_submitted
+        - total_consultations_booked
+        - active_workspaces_count
+        - practice_area_breakdown
+
+    AdminAnalyticsEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AdminAnalyticsResponse'
+        error:
+          type: "null"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - data
+        - error
+        - timestamp
