@@ -1,0 +1,32 @@
+{
+  "name": "legalconnect-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LegalConnect MVP Client Web Application - BCI Rule 36 Compliant Legal Gateway",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/fallback-build.cjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  },
+  "keywords": [
+    "legalconnect",
+    "calmstacks",
+    "legaltech",
+    "bci-rule-36",
+    "react"
+  ],
+  "author": "CalmStacks Agent Factory",
+  "license": "Apache-2.0"
+}
