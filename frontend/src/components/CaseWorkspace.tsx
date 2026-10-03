@@ -129,12 +129,14 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
 
   if (!currentWorkspace) {
     return (
-      <div className="max-w-7xl mx-auto py-16 px-4 text-center text-slate-400">
-        <div className="text-3xl mb-2">📁</div>
-        <h2 className="text-xl font-bold text-white font-serif">No Active Case Workspace Selected</h2>
-        <p className="text-xs text-slate-400 mt-1">
-          Book a consultation with a verified advocate to provision an encrypted case workspace.
-        </p>
+      <div className="max-w-7xl mx-auto py-16 px-4">
+        <div className="bg-slate-950 border border-slate-800 rounded-xl p-8 text-center text-slate-400 max-w-2xl mx-auto shadow-md">
+          <div className="text-3xl mb-2">📁</div>
+          <h2 className="text-sm font-bold text-white font-serif">No Active Case Workspace Selected</h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Book a consultation with a verified advocate to provision an encrypted case workspace.
+          </p>
+        </div>
       </div>
     );
   }
@@ -349,7 +351,10 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
               </div>
             </div>
           ) : (
-            <div className="text-xs text-slate-400">Consultation record loading...</div>
+            <div className="text-center py-16 text-slate-400">
+              <div className="inline-block w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-sm">Consultation record loading...</p>
+            </div>
           )}
         </div>
       )}
@@ -410,13 +415,21 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
                 <button
                   type="submit"
                   disabled={isUploading || !fileName.trim()}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
                     isUploading || !fileName.trim()
                       ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
                       : 'bg-amber-600 hover:bg-amber-500 text-slate-950 cursor-pointer'
                   }`}
                 >
-                  {isUploading ? 'Encrypting & Uploading...' : '🔒 Upload to Encrypted Vault'}
+                  {isUploading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Encrypting & Uploading...</span>
+                    </>
+                  ) : '🔒 Upload to Encrypted Vault'}
                 </button>
               </div>
             </form>
@@ -429,8 +442,12 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
             </h3>
 
             {documents.length === 0 ? (
-              <div className="text-xs text-slate-400 py-6 text-center">
-                No documents uploaded to this case vault yet.
+              <div className="bg-slate-950 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
+                <div className="text-3xl mb-2">📄</div>
+                <h3 className="text-sm font-bold text-white font-serif">No Documents</h3>
+                <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
+                  No documents have been uploaded to this encrypted case vault yet.
+                </p>
               </div>
             ) : (
               <div className="divide-y divide-slate-800">
@@ -552,13 +569,21 @@ export const CaseWorkspace: React.FC<CaseWorkspaceProps> = ({ initialWorkspaceId
             <button
               type="submit"
               disabled={isSending || !newMessageText.trim()}
-              className={`px-5 py-2.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 isSending || !newMessageText.trim()
                   ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
                   : 'bg-amber-600 hover:bg-amber-500 text-slate-950 cursor-pointer shadow-amber-900/30'
               }`}
             >
-              {isSending ? 'Sending...' : 'Send'}
+              {isSending ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Sending...</span>
+                </>
+              ) : 'Send'}
             </button>
           </form>
         </div>
