@@ -737,8 +737,13 @@ export function classifyPracticeAreas(text: string): {
     scores.push({ area: def, score });
   }
 
-  // Sort descending by score
-  scores.sort((a, b) => b.score - a.score);
+  // Sort descending by score, and alphabetically by name for deterministic behavior on ties
+  scores.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    }
+    return a.area.name.localeCompare(b.area.name);
+  });
 
   // If top score is 0, default to Consumer Protection / General Civil
   const topScoreItem = scores[0];
