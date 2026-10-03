@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 
 CREATE TABLE IF NOT EXISTS advocate_profiles (
@@ -36,7 +35,6 @@ CREATE TABLE IF NOT EXISTS advocate_profiles (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_advocate_profiles_user_id ON advocate_profiles(user_id);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_verification_status ON advocate_profiles(verification_status);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_city ON advocate_profiles(city);
 CREATE INDEX IF NOT EXISTS idx_advocate_profiles_consultation_fee ON advocate_profiles(consultation_fee);
@@ -65,8 +63,6 @@ CREATE TABLE IF NOT EXISTS ai_intake_summaries (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_ai_intake_summaries_intake_id ON ai_intake_summaries(intake_id);
-
 CREATE TABLE IF NOT EXISTS consultation_slots (
   id TEXT PRIMARY KEY,
   advocate_id TEXT NOT NULL REFERENCES advocate_profiles(id) ON DELETE CASCADE,
@@ -75,10 +71,10 @@ CREATE TABLE IF NOT EXISTS consultation_slots (
   mode TEXT NOT NULL DEFAULT 'video' 
     CHECK (mode IN ('audio', 'video', 'in_person')),
   is_booked INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT DEFAULT (datetime('now'))
+  created_at TEXT DEFAULT (datetime('now')),
+  CONSTRAINT chk_consultation_slots_time CHECK (end_time > start_time)
 );
 
-CREATE INDEX IF NOT EXISTS idx_consultation_slots_advocate_id ON consultation_slots(advocate_id);
 CREATE INDEX IF NOT EXISTS idx_consultation_slots_start_time ON consultation_slots(start_time);
 CREATE INDEX IF NOT EXISTS idx_consultation_slots_lookup ON consultation_slots(advocate_id, is_booked, start_time);
 
@@ -137,6 +133,6 @@ CREATE TABLE IF NOT EXISTS workspace_messages (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_workspace_messages_workspace_id ON workspace_messages(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_workspace_messages_created_at ON workspace_messages(created_at);
+CREATE INDEX IF NOT EXISTS idx_workspace_messages_workspace_id_created_at ON workspace_messages(workspace_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_workspace_messages_sender_id ON workspace_messages(sender_id);
 `;
