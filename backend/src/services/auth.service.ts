@@ -22,6 +22,16 @@ export class AuthService {
       throw new AppError(400, 'VALIDATION_FAILED', 'All registration fields are required');
     }
 
+    if (
+      typeof email !== 'string' ||
+      typeof password !== 'string' ||
+      typeof full_name !== 'string' ||
+      typeof role !== 'string' ||
+      typeof phone !== 'string'
+    ) {
+      throw new AppError(400, 'VALIDATION_FAILED', 'Invalid input format for registration fields');
+    }
+
     if (!['client', 'advocate', 'admin'].includes(role)) {
       throw new AppError(400, 'VALIDATION_FAILED', 'Invalid user role specified');
     }
@@ -104,6 +114,10 @@ export class AuthService {
 
     if (!email || !password) {
       throw new AppError(400, 'VALIDATION_FAILED', 'Email and password are required');
+    }
+
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      throw new AppError(400, 'VALIDATION_FAILED', 'Invalid input format for email or password');
     }
 
     const user = this.db
