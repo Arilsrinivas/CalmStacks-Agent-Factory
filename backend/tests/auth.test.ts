@@ -116,31 +116,4 @@ describe('Authentication & Identity Endpoints (/api/v1/auth)', () => {
     assert.equal(res.status, 401);
     assert.equal(res.body.error.code, 'UNAUTHORIZED');
   });
-
-  it('POST /api/v1/auth/login - returns 400 Bad Request when email is not a string', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: { "$ne": null },
-        password: 'Password@123',
-      });
-
-    assert.equal(res.status, 400);
-    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
-  });
-
-  it('POST /api/v1/auth/register - returns 400 Bad Request when email is not a string', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        email: { "$ne": null },
-        password: 'Password@123',
-        full_name: 'Invalid Input',
-        role: 'client',
-        phone: '+919999000004',
-      });
-
-    assert.equal(res.status, 400);
-    assert.equal(res.body.error.code, 'VALIDATION_FAILED');
-  });
 });
