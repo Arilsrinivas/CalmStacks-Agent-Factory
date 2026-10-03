@@ -41,7 +41,7 @@ export const DisclaimerBanner: React.FC<DisclaimerBannerProps> = ({
                 type="checkbox"
                 checked={accepted}
                 onChange={onAccept}
-                className="w-4 h-4 text-amber-600 rounded border-amber-400 focus:ring-amber-500 cursor-pointer"
+                className="w-4 h-4 text-amber-600 rounded border-amber-400 focus:ring-2 focus:ring-amber-500 cursor-pointer"
               />
               <span className="text-xs font-semibold text-slate-900">
                 I understand and acknowledge that this AI summary does not constitute formal legal counsel.

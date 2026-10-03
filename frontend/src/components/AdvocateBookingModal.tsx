@@ -157,7 +157,7 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
                   key={mode.id}
                   type="button"
                   onClick={() => setSelectedMode(mode.id)}
-                  className={`p-3 rounded-lg border text-center transition-all ${
+                  className={`p-3 rounded-lg border text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                     selectedMode === mode.id
                       ? 'bg-amber-600/20 border-amber-500 text-amber-300 font-bold'
                       : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
@@ -187,13 +187,14 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
                   const dateObj = new Date(slot.start_time);
                   const isSelected = selectedSlotId === slot.id;
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={slot.id}
                       onClick={() => {
                         setSelectedSlotId(slot.id);
                         setSelectedMode(slot.mode);
                       }}
-                      className={`p-3 rounded-lg border cursor-pointer text-xs transition-all ${
+                      className={`block w-full text-left p-3 rounded-lg border cursor-pointer text-xs transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                         isSelected
                           ? 'bg-amber-600/20 border-amber-500 text-white shadow-sm'
                           : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
@@ -213,7 +214,7 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
                       <div className="text-[10px] text-slate-400 capitalize mt-1">
                         Default: {slot.mode.replace('_', ' ')}
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -222,15 +223,16 @@ export const AdvocateBookingModal: React.FC<AdvocateBookingModalProps> = ({
 
           {/* Client Notes / Objectives */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            <label htmlFor="booking-notes" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
               Brief Note for Advocate (Optional)
             </label>
             <textarea
+              id="booking-notes"
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Highlight any specific question or urgency regarding your dispute..."
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-amber-500 focus:outline-none"
             />
           </div>
 

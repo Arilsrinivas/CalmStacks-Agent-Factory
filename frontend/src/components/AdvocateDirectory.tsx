@@ -136,7 +136,9 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
         {/* Search Bar */}
         <div className="mb-4">
           <div className="relative">
+            <label htmlFor="search-advocates" className="sr-only">Search Advocates</label>
             <input
+              id="search-advocates"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -158,11 +160,12 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
           {/* Practice Area */}
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Practice Domain</label>
+            <label htmlFor="practice-domain" className="block text-slate-400 font-semibold mb-1">Practice Domain</label>
             <select
+              id="practice-domain"
               value={selectedPracticeArea}
               onChange={(e) => setSelectedPracticeArea(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
             >
               {practiceAreaOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -174,11 +177,12 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
 
           {/* City */}
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">City / Region</label>
+            <label htmlFor="city-region" className="block text-slate-400 font-semibold mb-1">City / Region</label>
             <select
+              id="city-region"
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
             >
               {cityOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -190,11 +194,12 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
 
           {/* Court Jurisdiction */}
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Admitted Court / Forum</label>
+            <label htmlFor="admitted-court" className="block text-slate-400 font-semibold mb-1">Admitted Court / Forum</label>
             <select
+              id="admitted-court"
               value={selectedCourt}
               onChange={(e) => setSelectedCourt(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
             >
               {courtOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -206,11 +211,12 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
 
           {/* Language */}
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Language</label>
+            <label htmlFor="language" className="block text-slate-400 font-semibold mb-1">Language</label>
             <select
+              id="language"
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              className="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-md p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none"
             >
               {languageOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -223,16 +229,17 @@ export const AdvocateDirectory: React.FC<AdvocateDirectoryProps> = ({
           {/* Fee Range */}
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="text-slate-400 font-semibold">Max Fee: ₹{maxFee}</label>
+              <label htmlFor="max-fee" className="text-slate-400 font-semibold">Max Fee: ₹{maxFee}</label>
             </div>
             <input
+              id="max-fee"
               type="range"
               min="500"
               max="4000"
               step="100"
               value={maxFee}
               onChange={(e) => setMaxFee(Number(e.target.value))}
-              className="w-full accent-amber-500 cursor-pointer"
+              className="w-full accent-amber-500 cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500"
             />
           </div>
         </div>

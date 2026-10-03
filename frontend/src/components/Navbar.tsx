@@ -62,9 +62,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenA
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo & Platform Name */}
-          <div
-            className="flex items-center space-x-3 cursor-pointer select-none"
+          <button
+            type="button"
+            className="flex items-center space-x-3 cursor-pointer select-none text-left focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-lg"
             onClick={() => setActiveTab('intake')}
+            aria-label="Go to Case Intake Wizard"
           >
             <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 font-black shadow-lg">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -84,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenA
                 Ethical Digital Legal Gateway & Workspace
               </p>
             </div>
-          </div>
+          </button>
 
           {/* Navigation Links */}
           <nav className="hidden md:flex space-x-1">

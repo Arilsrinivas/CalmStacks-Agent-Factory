@@ -144,11 +144,12 @@ export const CaseIntakeWizard: React.FC<CaseIntakeWizardProps> = ({ onIntakeComp
                   Your Problem Description <span className="text-rose-400">*</span>
                 </label>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs text-slate-400">Language:</span>
+                  <label htmlFor="language-select" className="text-xs text-slate-400">Language:</label>
                   <select
+                    id="language-select"
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded px-2 py-1 focus:ring-amber-500 focus:outline-none"
+                    className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded px-2 py-1 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                   >
                     <option value="English">English</option>
                     <option value="Hindi">हिंदी (Hindi)</option>
@@ -156,7 +157,9 @@ export const CaseIntakeWizard: React.FC<CaseIntakeWizardProps> = ({ onIntakeComp
                   </select>
                 </div>
               </div>
+              <label htmlFor="narrative-textarea" className="sr-only">Dispute Narrative</label>
               <textarea
+                id="narrative-textarea"
                 rows={6}
                 required
                 value={rawText}
